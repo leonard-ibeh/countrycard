@@ -31,7 +31,10 @@ const renderCountry = function (data) {
 
 const getCountryNeighbour = function (country) {
   const request = new XMLHttpRequest();
-  request.open("GET", `https://restcountries.com/v2/name/${country}`);
+  request.open(
+    "GET",
+    `https://countries-api-836d.onrender.com/countries/name/${country}`
+  );
   request.send();
 
   request.addEventListener("load", function () {
@@ -48,7 +51,10 @@ const getCountryNeighbour = function (country) {
 
     // AJAX call country 2
     const request2 = new XMLHttpRequest();
-    request2.open("GET", `https://restcountries.eu/rest/v2/alpha/${neighbour}`);
+    request2.open(
+      "GET",
+      `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`
+    );
     request2.send();
 
     request2.addEventListener("load", function () {
