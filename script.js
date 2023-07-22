@@ -5,9 +5,9 @@ const countriesContainer = document.querySelector(".countries");
 
 ///////////////////////////////////////
 
-const renderCountry = function (data) {
+const renderCountry = function (data, className = "") {
   const html = `
-    <article class="country">
+    <article class="country ${className}">
             <img class="country__img" src="${data.flag}" />
             <div class="country__data">
               <h3 class="country__name">${data.name}</h3>
@@ -58,8 +58,10 @@ const getCountryNeighbour = function (country) {
     request2.send();
 
     request2.addEventListener("load", function () {
-      console.log(this.responseText);
+      const data2 = JSON.parse(this.responseText);
+
+      renderCountry(data2, "neighbour");
     });
   });
 };
-getCountryNeighbour("portugal");
+getCountryNeighbour("Ghana");
