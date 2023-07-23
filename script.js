@@ -29,7 +29,7 @@ const renderCountry = function (data, className = "") {
   countriesContainer.style.opacity = 1;
 };
 
-const getCountryNeighbour = function (country) {
+/*const getCountryNeighbour = function (country) {
   const request = new XMLHttpRequest();
   request.open(
     "GET",
@@ -65,3 +65,29 @@ const getCountryNeighbour = function (country) {
   });
 };
 getCountryNeighbour("Ghana");
+*/
+
+// const request = fetch(
+//   "https://countries-api-836d.onrender.com/countries/name/portugal"
+// );
+// console.log(request);
+
+// const getCountryData = function (country) {
+//   fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
+//     .then(function (responce) {
+//       console.log(responce);
+//       return responce.json();
+//     })
+//     .then(function (data) {
+//       console.log(data);
+//       renderCountry(data[0]);
+//     });
+// };
+// getCountryData("portugal");
+
+const getCountryData = function (country) {
+  fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
+    .then((response) => response.json())
+    .then((data) => renderCountry(data[0]));
+};
+getCountryData("portugal");
