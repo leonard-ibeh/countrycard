@@ -26,7 +26,11 @@ const renderCountry = function (data, className = "") {
     `;
   countriesContainer.insertAdjacentHTML("beforeend", html);
 
-  countriesContainer.style.opacity = 1;
+  // countriesContainer.style.opacity = 1;
+};
+const renderError = function (msg) {
+  countriesContainer.insertAdjacentHTML("beforeend", msg);
+  // countriesContainer.style.opacity = 1;
 };
 
 /*const getCountryNeighbour = function (country) {
@@ -90,7 +94,7 @@ const getCountryData = function (country) {
     .then((response) => response.json())
     .then((data) => {
       renderCountry(data[0]);
-      const neighbour = data[0].borders[0];
+      const neighbour = data[0].borders?.[0];
       if (!neighbour) return;
       // Country 2
       return fetch(
@@ -98,6 +102,16 @@ const getCountryData = function (country) {
       );
     })
     .then((response) => response.json())
-    .then((data) => renderCountry(data, "neighbour"));
+    .then((data) => renderCountry(data, "neighbour"))
+    .catch((err) => {
+      console.log(`${err}opps`);
+      renderError(`Something went wrong ==> ${err.message}. Try again!!`);
+    })
+    .finally(() => {
+      countriesContainer.style.opacity = 1;
+    });
 };
-getCountryData("portugal");
+
+btn.addEventListener("click", function () {
+  getCountryData("portugal");
+});
