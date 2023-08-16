@@ -14,7 +14,7 @@ const renderCountry = function (data, className = "") {
               <h4 class="country__region">${data.region}</h4>
               <p class="country__row"><span>👫</span>${(
                 +data.population / 1000000
-              ).toFixed(1)} people</p>
+              ).toFixed(1)} million people</p>
               <p class="country__row"><span>🗣️</span>${
                 data.languages[0].name
               }</p>
@@ -25,13 +25,81 @@ const renderCountry = function (data, className = "") {
           </article>
     `;
   countriesContainer.insertAdjacentHTML("beforeend", html);
-
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
 const renderError = function (msg) {
   countriesContainer.insertAdjacentHTML("beforeend", msg);
-  // countriesContainer.style.opacity = 1;
+  countriesContainer.style.opacity = 1;
 };
+// const getJSON = function (url, errorMsg = "Something went wrong") {
+//   return fetch(url).then((response) => {
+//     if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+//     return response.json();
+//   });
+// };
+
+// const getCountryData = function (country) {
+//   // Country 1
+//   getJSON(
+//     `https://countries-api-836d.onrender.com/countries/name/${country}`,
+//     "Country not found"
+//   )
+//     .then((data) => {
+//       renderCountry(data[0]);
+//       const neighbour = data[0].borders?.[0];
+//       if (!neighbour) throw new Error("No neighbour found");
+//       // Country 2
+//       return getJSON(
+//         `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+//         "Country not found"
+//       );
+//     })
+//     .then((data) => renderCountry(data, "neighbour"))
+//     .catch((err) => {
+//       console.log(`${err}opps`);
+//       renderError(`Something went wrong ==> ${err.message}. Try again!!`);
+//     })
+//     .finally(() => {
+//       countriesContainer.style.opacity = 1;
+//     });
+// };
+
+// btn.addEventListener("click", function () {
+//   getCountryData("Nigeria");
+// });
+var requestOptions = {
+  method: "GET",
+};
+
+const whereAmI = function (lat, lon) {
+  fetch(
+    `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lon}&format=json&apiKey=ac5318f3464340739468959070a59218`,
+    requestOptions
+  )
+    .then((res) => {
+      if (!res.ok) throw new Error(`Problem with geocoding ${res.status}`);
+      return res.json();
+    })
+    .then((data) => {
+      console.log(data);
+      console.log(
+        `You are in ${data.results[0].state}, ${data.results[0].country}`
+      );
+      return fetch(
+        `https://countries-api-836d.onrender.com/countries/name/${data.results[0].country}`
+      );
+    })
+    .then((res) => {
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+
+      return res.json();
+    })
+    .then((data) => renderCountry(data[0]))
+    .catch((err) => console.error(`${err.message}!!`));
+};
+// whereAmI(6.45003087165378, 3.394913656136737);
+// whereAmI(11.45003087165378, 4.394913656136737);
+whereAmI(23.45003087165378, 8.394913656136737);
 
 /*const getCountryNeighbour = function (country) {
   const request = new XMLHttpRequest();
@@ -88,30 +156,3 @@ getCountryNeighbour("Ghana");
 //     });
 // };
 // getCountryData("portugal");
-
-const getCountryData = function (country) {
-  fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
-    .then((response) => response.json())
-    .then((data) => {
-      renderCountry(data[0]);
-      const neighbour = data[0].borders?.[0];
-      if (!neighbour) return;
-      // Country 2
-      return fetch(
-        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`
-      );
-    })
-    .then((response) => response.json())
-    .then((data) => renderCountry(data, "neighbour"))
-    .catch((err) => {
-      console.log(`${err}opps`);
-      renderError(`Something went wrong ==> ${err.message}. Try again!!`);
-    })
-    .finally(() => {
-      countriesContainer.style.opacity = 1;
-    });
-};
-
-btn.addEventListener("click", function () {
-  getCountryData("portugal");
-});
